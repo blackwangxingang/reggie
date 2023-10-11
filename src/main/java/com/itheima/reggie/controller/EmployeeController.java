@@ -7,9 +7,7 @@ import com.itheima.reggie.service.impl.EmployeeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +20,13 @@ public class EmployeeController {
     private EmployeeServiceImpl employeeService;
 
 
+    /**
+     * 登录
+     * @param request
+     * @param employee
+     * @return
+     */
+    @PostMapping("/login")
     public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
 
         // 1. 将页面提交的密码 password 进行 md5 加密处理
@@ -42,8 +47,21 @@ public class EmployeeController {
             return R.error("账号已经禁用");
         }
 
-        // 登录成功
+        // 登录成功，将员工 id 存入 Session 并返回登录成功结果
         request.getSession().setAttribute("employee", emp.getId());
         return R.success(emp);
+    }
+
+
+    /**
+     * 退出
+     * @param request
+     * @return
+     */
+    @PostMapping("/logout")
+    public R<String> logout(HttpServletRequest request) {
+        // 清理 Session 中保存的当前员工登录的 id
+        request.getSession().removeAttribute("employee");
+        return R.success("退出成功");
     }
 }
