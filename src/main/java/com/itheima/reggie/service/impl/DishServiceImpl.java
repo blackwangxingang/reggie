@@ -2,6 +2,7 @@ package com.itheima.reggie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itheima.reggie.common.R;
 import com.itheima.reggie.dto.DishDto;
 import com.itheima.reggie.entity.Dish;
 import com.itheima.reggie.entity.DishFlavor;
@@ -12,6 +13,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +25,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Autowired
     private DishFlavorService dishFlavorService;
+
+    @Autowired
+    private DishService dishService;
 
     @Override
     @Transactional
@@ -69,5 +76,25 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         flavors = flavors.stream().peek((item) -> item.setDishId(dishDto.getId())).collect(Collectors.toList());
 
         dishFlavorService.saveBatch(flavors);
+    }
+
+    //停售起售菜品
+    @PostMapping("/status/{status}")
+    public R<String> sale(@PathVariable int status,
+                          String[] ids){
+        for(String id: ids){
+            Dish dish = dishService.getById(id);
+            dish.setStatus(status);
+            dishService.updateById(dish);
+        }
+        return R.success("修改成功");
+    }
+    //删除菜品
+    @DeleteMapping
+    public R<String> delete(String[] ids){
+        for (String id:ids) {
+            dishService.removeById(id);
+        }
+        return R.success("删除成功");
     }
 }
