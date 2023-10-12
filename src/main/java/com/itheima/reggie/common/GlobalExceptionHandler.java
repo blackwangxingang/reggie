@@ -1,4 +1,4 @@
-package com.itheima.reggie.exception;
+package com.itheima.reggie.common;
 
 import com.itheima.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
