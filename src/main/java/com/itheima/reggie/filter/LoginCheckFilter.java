@@ -1,6 +1,7 @@
 package com.itheima.reggie.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -57,6 +58,10 @@ public class LoginCheckFilter implements Filter {
         Object employeeId = request.getSession().getAttribute("employee");
         if (employeeId != null) {
             log.info("当前用户已登录，用户id为：{}", employeeId);
+
+            // 在LogincheckFilter的doFilter方法中调用BaseContext来设置当前登录用户的id
+            BaseContext.setCurrentId((Long) employeeId);
+
             filterChain.doFilter(request, response);
             return;
         }
