@@ -83,4 +83,17 @@ public class DishController {
         dishService.updateWithFlavor(dishDto);
         return R.success("修改菜品成功");
     }
+
+    //根据条件查询对应菜品数据
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish){
+        List<Dish> list=dishService.list(
+                new LambdaQueryWrapper<Dish>()
+                        .eq(Dish::getStatus,1)
+                        .eq(dish.getCategoryId()!=null,Dish::getCategoryId,dish.getCategoryId())
+                        .orderByAsc(Dish::getSort)
+                        .orderByDesc(Dish::getUpdateTime));
+
+        return R.success(list);
+    }
 }

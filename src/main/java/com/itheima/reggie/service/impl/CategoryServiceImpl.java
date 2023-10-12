@@ -9,7 +9,7 @@ import com.itheima.reggie.entity.Setmeal;
 import com.itheima.reggie.mapper.CategoryMapper;
 import com.itheima.reggie.service.CategoryService;
 import com.itheima.reggie.service.DishService;
-import com.itheima.reggie.service.SetMealService;
+import com.itheima.reggie.service.SetmealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     private DishService dishService;
 
     @Autowired
-    private SetMealService setmealService;
+    private SetmealService setmealService;
 
     @Override
     public void remove(Long id) {
