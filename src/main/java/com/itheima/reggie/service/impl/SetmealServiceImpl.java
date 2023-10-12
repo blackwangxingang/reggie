@@ -1,12 +1,14 @@
 package com.itheima.reggie.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.dto.SetmealDto;
 import com.itheima.reggie.entity.Setmeal;
 import com.itheima.reggie.entity.SetmealDish;
 import com.itheima.reggie.mapper.SetMealMapper;
-import com.itheima.reggie.service.SetmealService;
 import com.itheima.reggie.service.SetmealDishService;
+import com.itheima.reggie.service.SetmealService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,5 +35,19 @@ public class SetmealServiceImpl extends ServiceImpl<SetMealMapper, Setmeal> impl
         //保存套餐和菜品的关联信息，操作setmeal_dish，执行insert操作
         setmealDishService.saveBatch(setmealDishes);
 
+    }
+
+    @Override
+    public SetmealDto getByIdWithDish(Long id) {
+        //查询套餐基本信息
+        Setmeal setmeal = this.getById(id);
+        SetmealDto setmealDto = new SetmealDto();
+        BeanUtils.copyProperties(setmeal, setmealDto);
+
+        //查询套餐菜品信息
+        List<SetmealDish> list = setmealDishService.list(new LambdaQueryWrapper<SetmealDish>().eq(SetmealDish::getSetmealId,setmeal.getId()));
+
+        setmealDto.setSetmealDishes(list);
+        return setmealDto;
     }
 }

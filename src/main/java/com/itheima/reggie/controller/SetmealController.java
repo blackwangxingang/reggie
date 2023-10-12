@@ -101,4 +101,12 @@ public class SetmealController {
         }
         return R.success("修改成功");
     }
+
+    //根据Id查询套餐信息
+    @GetMapping("/{id}")
+    public R<SetmealDto> getById(@PathVariable Long id){
+        SetmealDto setmealDto=setmealService.getByIdWithDish(id);
+
+        return R.success(setmealDto);
+    }
 }

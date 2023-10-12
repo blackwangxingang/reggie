@@ -10,4 +10,6 @@ public interface SetmealService extends IService<Setmeal>{
      * @param setmealDto
      */
     public void saveWithDish(SetmealDto setmealDto);
+
+    SetmealDto getByIdWithDish(Long id);
 }
