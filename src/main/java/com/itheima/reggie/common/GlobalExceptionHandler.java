@@ -1,6 +1,5 @@
-package com.itheima.reggie.exception;
+package com.itheima.reggie.common;
 
-import com.itheima.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,5 +27,14 @@ public class GlobalExceptionHandler {
         }
 
         return R.error("未知错误");
+    }
+
+
+    //进行异常处理方法
+    @ExceptionHandler(CustomException.class)
+    public R<String> exceptionHandler(CustomException ex){
+        log.error(ex.getMessage());
+
+        return R.error(ex.getMessage());
     }
 }

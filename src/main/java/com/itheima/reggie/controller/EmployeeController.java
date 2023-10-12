@@ -107,5 +107,37 @@ public class EmployeeController {
         return R.success(pageInfo);
     }
 
-    // todo 启用/禁用员工账号 https://www.cnblogs.com/KizunaAI/p/16258050.html#4%E5%90%AF%E7%94%A8%E7%A6%81%E7%94%A8%E5%91%98%E5%B7%A5%E8%B4%A6%E5%8F%B7
+    /**
+     * 启用/禁用员工账号
+     * @param request
+     * @param employee
+     * @return
+     */
+    @PostMapping
+    public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
+        log.info("启用/禁用员工账号，员工信息：{}", employee.toString());
+
+        Long empId = (Long) request.getSession().getAttribute("employee");
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(empId);
+        employeeService.updateById(employee);
+
+        return R.success("员工信息修改成功");
+    }
+
+
+    /**
+     * 根据 id 查询员工信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public R<Employee> getById(@PathVariable String id) {
+        log.info("根据id查询对象");
+        Employee emp = employeeService.getById(id);
+        if (emp != null) {
+            return R.success(emp);
+        }
+        return R.error("没有查询到该用户信息");
+    }
 }
