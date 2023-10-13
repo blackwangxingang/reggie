@@ -113,7 +113,7 @@ public class EmployeeController {
      * @param employee
      * @return
      */
-    @PostMapping
+    @PutMapping
     public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
         log.info("启用/禁用员工账号，员工信息：{}", employee.toString());
 
