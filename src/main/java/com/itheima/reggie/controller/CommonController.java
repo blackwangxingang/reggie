@@ -32,8 +32,11 @@ public class CommonController {
 
         // 原始文件名
         String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) {
+            return R.error("上传失败: originalFilename is null");
+        }
         String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String fileName = UUID.randomUUID().toString() + suffix;
+        String fileName = UUID.randomUUID() + suffix;
 
         // 创建一个目录对象
         File dir = new File(basePath);
@@ -62,7 +65,7 @@ public class CommonController {
     public void download(String name, HttpServletResponse response) {
         try {
             // 输入流，通过输入流读取文件内容
-            FileInputStream fileInputStream = new FileInputStream(new File(basePath + name));
+            FileInputStream fileInputStream = new FileInputStream(basePath + name);
             // 输出流，通过输出流将文件写会浏览器，在浏览器中展示图片
             ServletOutputStream outputStream = response.getOutputStream();
 

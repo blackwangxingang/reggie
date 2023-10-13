@@ -91,7 +91,9 @@ public class LoginCheckFilter implements Filter {
      */
     private boolean noNeedProcess(String requestURI) {
         for (String url : urls) {
-            return PATH_MATCHER.match(url, requestURI);
+            if (PATH_MATCHER.match(url, requestURI)) {
+                return true;
+            }
         }
         return false;
     }

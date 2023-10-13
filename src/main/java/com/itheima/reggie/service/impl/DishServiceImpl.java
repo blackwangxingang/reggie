@@ -26,9 +26,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     @Autowired
     private DishFlavorService dishFlavorService;
 
-    /*@Autowired
-    private DishService dishService;*/
-
     @Override
     @Transactional
     public void saveWithFlavor(DishDto dishDto) {
@@ -76,18 +73,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         flavors = flavors.stream().peek((item) -> item.setDishId(dishDto.getId())).collect(Collectors.toList());
 
         dishFlavorService.saveBatch(flavors);
-    }
-
-    // 停售起售菜品
-    @PostMapping("/status/{status}")
-    public R<String> sale(@PathVariable int status,
-                          String[] ids) {
-        for (String id : ids) {
-            Dish dish = getById(id);
-            dish.setStatus(status);
-            updateById(dish);
-        }
-        return R.success("修改成功");
     }
 
     // 删除菜品
