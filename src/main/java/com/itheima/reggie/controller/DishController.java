@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/dish")
 public class DishController {
+
     @Autowired
     private DishService dishService;
     @Autowired
@@ -95,5 +96,17 @@ public class DishController {
                         .orderByDesc(Dish::getUpdateTime));
 
         return R.success(list);
+    }
+
+    // 停售起售菜品
+    @PostMapping("/status/{status}")
+    public R<String> sale(@PathVariable int status,
+                          String[] ids) {
+        for (String id : ids) {
+            Dish dish = dishService.getById(id);
+            dish.setStatus(status);
+            dishService.updateById(dish);
+        }
+        return R.success("修改成功");
     }
 }
