@@ -26,8 +26,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     @Autowired
     private DishFlavorService dishFlavorService;
 
-    @Autowired
-    private DishService dishService;
+    /*@Autowired
+    private DishService dishService;*/
 
     @Override
     @Transactional
@@ -48,14 +48,14 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     @Override
     @Transactional
     public DishDto getByIdWithFlavor(Long id) {
-        //查询菜品基本信息
+        // 查询菜品基本信息
         Dish dish = this.getById(id);
 
-        DishDto dishDto=new DishDto();
-        BeanUtils.copyProperties(dish,dishDto);
+        DishDto dishDto = new DishDto();
+        BeanUtils.copyProperties(dish, dishDto);
 
-        //查询菜品口味信息
-        List<DishFlavor> list = dishFlavorService.list(new LambdaQueryWrapper<DishFlavor>().eq(DishFlavor::getDishId,dish.getId()));
+        // 查询菜品口味信息
+        List<DishFlavor> list = dishFlavorService.list(new LambdaQueryWrapper<DishFlavor>().eq(DishFlavor::getDishId, dish.getId()));
 
         dishDto.setFlavors(list);
 
@@ -64,13 +64,13 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Override
     public void updateWithFlavor(DishDto dishDto) {
-        //更新dish表基本信息
+        // 更新dish表基本信息
         this.updateById(dishDto);
 
-        //更新dish_flavor表信息delete操作
+        // 更新dish_flavor表信息delete操作
         dishFlavorService.remove(new LambdaQueryWrapper<DishFlavor>().eq(DishFlavor::getDishId, dishDto.getId()));
 
-        //更新dish_flavor表信息insert操作
+        // 更新dish_flavor表信息insert操作
         List<DishFlavor> flavors = dishDto.getFlavors();
 
         flavors = flavors.stream().peek((item) -> item.setDishId(dishDto.getId())).collect(Collectors.toList());
@@ -78,22 +78,23 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         dishFlavorService.saveBatch(flavors);
     }
 
-    //停售起售菜品
+    // 停售起售菜品
     @PostMapping("/status/{status}")
     public R<String> sale(@PathVariable int status,
-                          String[] ids){
-        for(String id: ids){
-            Dish dish = dishService.getById(id);
+                          String[] ids) {
+        for (String id : ids) {
+            Dish dish = getById(id);
             dish.setStatus(status);
-            dishService.updateById(dish);
+            updateById(dish);
         }
         return R.success("修改成功");
     }
-    //删除菜品
+
+    // 删除菜品
     @DeleteMapping
-    public R<String> delete(String[] ids){
-        for (String id:ids) {
-            dishService.removeById(id);
+    public R<String> delete(String[] ids) {
+        for (String id : ids) {
+            removeById(id);
         }
         return R.success("删除成功");
     }
